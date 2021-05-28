@@ -1,0 +1,23 @@
+{
+  "name": "events-chain-contracts",
+  "version": "1.0.0",
+  "description": "Solidity contract for EventsChain DAPP",
+  "main": "index.js",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test"
+  },
+  "author": "Bobo K.",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "chai": "^4.3.4",
+    "ethereum-waffle": "^3.3.0",
+    "ethers": "^5.2.0",
+    "hardhat": "^2.3.0"
+  },
+  "dependencies": {
+    "eslint": "^7.27.0"
+  }
+}
