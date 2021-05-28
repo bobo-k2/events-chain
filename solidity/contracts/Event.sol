@@ -22,7 +22,7 @@ contract Event {
     manager = msg.sender;
     eventName = _eventName;
     venue = _venue;
-    ticketPrice = _ticketPrice;
+    setTicketPrice(_ticketPrice);
     ticketsAvailable = _ticketsAvailable;
   }
 
