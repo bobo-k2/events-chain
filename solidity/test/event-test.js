@@ -1,8 +1,10 @@
 const { expect } = require("chai");
+const { BigNumber } = require("ethers")
 
 let event;
 let manager;
 let user;
+let user2;
 
 
 describe("Event contract", () => {
@@ -12,11 +14,11 @@ describe("Event contract", () => {
       "Boysetsfire",
       "Hollywood Palladium",
       100,
-      4000
+      1
     );
     await event.deployed();
   
-    [manager, user] = await ethers.getSigners();
+    [manager, user, user2] = await ethers.getSigners();
   });
 
   describe("Contract deployment", () => {
@@ -32,7 +34,7 @@ describe("Event contract", () => {
       expect(await event.eventName()).to.equal("Boysetsfire");
       expect(await event.venue()).to.equal("Hollywood Palladium");
       expect(await event.ticketPrice()).to.equal(100);
-      expect(await event.ticketsAvailable()).to.equal(4000);
+      expect(await event.ticketsAvailable()).to.equal(1);
     });
   });
 
@@ -48,15 +50,53 @@ describe("Event contract", () => {
       ).to.be.revertedWith("Funds sent are lower than ticket price");
     });
 
+    it("can't buy ticket if no tickets available", async () => {
+      // Single ticket available, so buy one. Second buy attempt should fail.
+      await event.connect(user).buyTicket({value: "100"})
+      await expect(
+        event.connect(user).buyTicket({value: "100"})
+      ).to.be.revertedWith("No tickets available");
+    });
+
     it("can buy ticket", async() => {
-      await event.connect(user).buyTicket({value: "100"});
-      expect(await event.connect(user).hasTicket()).to.equal(true);
+      await expect(() => event.connect(user).buyTicket({value: "100"}))
+        .to.changeEtherBalance(event, 100);
+      expect(await event.connect(user).hasTicket(1)).to.equal(true);
     });
 
     it("raises event when ticket bought", async () => {
       await expect(event.connect(user).buyTicket({value: "110"}))
         .to.emit(event, "TicketBought")
         .withArgs(event.address, user.address);
+    });
+  });
+
+  describe("Transfer", () => {
+    beforeEach(async () => {
+      await event.connect(user).buyTicket({value: "100"});
+    });
+
+    it("can transfer ticket", async() => {
+      await event.connect(user).transferTicket(1, user2.address);  
+      expect(await event.connect(user2).hasTicket(1)).to.equal(true);    
+    });
+
+    it("raises event when ticket transfered", async () => {
+      await expect(event.connect(user).transferTicket(1, user2.address))
+        .to.emit(event, "TicketTransfered")
+        .withArgs(1, user.address, user2.address);
+    });
+
+    it("can't transfer ticket if not the owner", async() => {
+      await expect(
+        event.connect(user).connect(user2).transferTicket(1, user.address)
+      ).to.be.revertedWith("Ticket not owned by the sender");   
+    });
+
+    it("can transfer ticket funds from the contract to owner", async() => {
+      await expect(() => event.connect(manager).withdrawFunds())
+        .to.changeEtherBalance(event, -100);
+      // TODO check manager balance changeEtherBalance doens't work
     });
   });
 });

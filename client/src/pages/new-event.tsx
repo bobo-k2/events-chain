@@ -18,6 +18,7 @@ const NewEvent: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   
   const createEvent: SubmitHandler<IEventInfo> = (data) => {
+    // TODO submit to block chain
     setLoading(true);
     console.log(data);
   }

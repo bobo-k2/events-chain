@@ -10,6 +10,15 @@ task("accounts", "Prints the list of accounts", async () => {
   }
 });
 
+task("balances", "Prints the list of account balances", async () => {
+  const accounts = await ethers.getSigners();
+
+  for (const account of accounts) {
+    balance = await ethers.provider.getBalance(account.address);
+    console.log(account.address, balance.toString());
+  }
+});
+
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
