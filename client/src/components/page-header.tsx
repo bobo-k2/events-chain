@@ -1,21 +1,17 @@
 import React from 'react';
-import { Segment, Container, Menu, Button } from 'semantic-ui-react';
+import { Segment, Container, Menu } from 'semantic-ui-react';
 
 const PageHeader: React.FC = () => {
-  const fixed = false;
-
   return(
     <Segment
       inverted
       textAlign='center'
-      style={{ minHeight: 500, padding: '1em 0em' }}
+      style={{ padding: '1em 0em' }}
       vertical
     >
       <Menu
         fixed='top'
-        inverted={!fixed}
-        pointing={!fixed}
-        secondary={!fixed}
+        inverted
         size='large'
       >
         <Container>
@@ -29,8 +25,8 @@ const PageHeader: React.FC = () => {
           >
             TicketsBlock
           </Menu.Item>
-          <Menu.Item as='a' active>
-            Home
+          <Menu.Item as='a'>
+            Event
           </Menu.Item>
           {/* <Menu.Item position='right'>
             <Button as='a' inverted={!fixed}>
