@@ -1,11 +1,12 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.4;
 
 /// @author Bobo K.
 /// @title An event contract
 contract Event {
   address public manager;
-  string public eventName;
+  string public name;
+  uint public date;
   string public venue;
   uint public ticketPrice;
   uint16 public ticketsAvailable;
@@ -16,13 +17,15 @@ contract Event {
   event TicketTransfered(uint16 ticketId, address from, address to);
 
   constructor(
-    string memory _eventName,
+    string memory _name,
     string memory _venue,
+    uint _date,
     uint _ticketPrice,
     uint16 _ticketsAvailable
   ) {
     manager = msg.sender;
-    eventName = _eventName;
+    name = _name;
+    date = _date;
     venue = _venue;
     setTicketPrice(_ticketPrice);
     ticketsAvailable = _ticketsAvailable;
@@ -66,7 +69,7 @@ contract Event {
 
   /// Withdraw funds from the contract account to the owner account.
   function withdrawFunds() external payable managerOnly() {
-    msg.sender.transfer(address(this).balance);
+    payable(msg.sender).transfer(address(this).balance);
   }
 
   /// Checks if sender owns the ticket.

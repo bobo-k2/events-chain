@@ -13,6 +13,7 @@ describe("Event contract", () => {
     event = await Event.deploy(
       "Boysetsfire",
       "Hollywood Palladium",
+      new Date().getTime(),
       100,
       1
     );
@@ -31,7 +32,7 @@ describe("Event contract", () => {
     });
     
     it("initializes contract with proper values", async () => {
-      expect(await event.eventName()).to.equal("Boysetsfire");
+      expect(await event.name()).to.equal("Boysetsfire");
       expect(await event.venue()).to.equal("Hollywood Palladium");
       expect(await event.ticketPrice()).to.equal(100);
       expect(await event.ticketsAvailable()).to.equal(1);
