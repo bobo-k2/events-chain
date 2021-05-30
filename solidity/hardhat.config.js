@@ -1,4 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
+const { ALCHEMY_API_KEY, ROPSTEN_PRIVATE_KEY } = require("./scripts/secrets");
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -27,5 +28,11 @@ task("balances", "Prints the list of account balances", async () => {
  */
 module.exports = {
   solidity: "0.8.4",
+  networks: {
+    ropsten: {
+      url: `https://eth-ropsten.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+      accounts: [`0x${ROPSTEN_PRIVATE_KEY}`]
+    }
+  }
 };
 

@@ -1,9 +1,22 @@
+import { useEffect, useState } from 'react';
 import { Container, Header, Button, Icon, Segment, SemanticICONS } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/page-layout';
+import eventFactoryContract from '../event-factory';
 
 const Home: React.FC = () => {
   const buttonIcon: SemanticICONS = 'arrow right';
+
+  const [events, setEvents] = useState<any[]>([]);
+
+  useEffect(() => {
+    getEvents();
+  }, [])
+
+  const getEvents = async () => {
+    const e = await eventFactoryContract.getEvents();
+    setEvents(e);
+  }
 
   return (
     <PageLayout>
@@ -42,6 +55,9 @@ const Home: React.FC = () => {
           </Link>
         </Container>
       </Segment>
+      <Container>
+        {events}
+      </Container>
     </PageLayout>
   )
 }
