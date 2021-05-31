@@ -5,7 +5,7 @@ import { Container, Form, Input, Button, Message } from 'semantic-ui-react';
 import { DateTimeInput } from 'semantic-ui-calendar-react';
 import PageLayout from '../components/page-layout';
 import ValidationError from '../components/validation-error';
-import IEventInfo from '../data/event-info';
+import { IEventInfo, IEventDbInfo } from '../data/event-info';
 import eventFactoryContract from '../event-factory';
 import { signer } from '../web3';
 
@@ -34,7 +34,27 @@ const NewEvent: React.FC = () => {
           data.ticketPrice,
           data.ticketsCount
         );
-        
+      const events: string[] = await eventFactoryContract.getEvents();
+      
+      let requestData: IEventDbInfo = {
+        name: data.name,
+        venue: data.venue,
+        ticketPrice: data.ticketPrice,
+        date: Date.parse(data.date),
+        contractAddress: events[events.length - 1]
+      };
+
+      console.log(requestData);
+      
+      await fetch('/api/events', {
+        method: 'post',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        }),
+        body: JSON.stringify(requestData)
+      })
+
       history.push('/');
     } catch (err) {
       setErrorMessage(err.message);
@@ -91,7 +111,7 @@ const NewEvent: React.FC = () => {
         <Message error header="Oops!" content={errorMessage} />
         <Button primary loading={loading} floated='right'>Create</Button>
         <Link to='/'>
-          <Button floated='right'>Cancel</Button>
+          <Button floated='right' disabled={loading}>Cancel</Button>
         </Link>
       </Form>
       </Container>

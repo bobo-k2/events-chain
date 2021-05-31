@@ -8,10 +8,10 @@ datasource db {
 }
 
 model Event {
-  Id              Int     @id @default(autoincrement())
-  Name            String
-  Venue           String
-  Date            Int
-  TicketPrice     Decimal
-  ContractAddress String
+  id              Int     @id @default(autoincrement())
+  name            String
+  venue           String
+  date            Int
+  ticketPrice     Decimal
+  contractAddress String
 }

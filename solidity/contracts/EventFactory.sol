@@ -7,7 +7,7 @@ import './Event.sol';
 /// @title Deploys event contracts
 contract EventFactory {
   address[] public events;
-  uint16 eventsCount;
+  uint16 public eventsCount;
 
   function createEvent(
     string memory _name,
@@ -15,7 +15,7 @@ contract EventFactory {
     uint _date,
     uint _ticketPrice,
     uint16 _ticketsAvailable
-  ) external {
+  ) external returns(address) {
     Event newEvent = new Event(
       _name,
       _venue,
@@ -23,8 +23,10 @@ contract EventFactory {
       _ticketPrice,
       _ticketsAvailable
     );
-
     events.push(address(newEvent));
+    eventsCount ++;
+
+    return events[eventsCount - 1];
   }
 
   function getEvents() external view returns(address[] memory) {

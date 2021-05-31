@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Segment, Container, Menu } from 'semantic-ui-react';
 
 const PageHeader: React.FC = () => {
@@ -25,17 +26,9 @@ const PageHeader: React.FC = () => {
           >
             TicketsBlock
           </Menu.Item>
-          <Menu.Item as='a'>
-            Event
-          </Menu.Item>
-          {/* <Menu.Item position='right'>
-            <Button as='a' inverted={!fixed}>
-              Log in
-            </Button>
-            <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
-              Sign Up
-            </Button>
-          </Menu.Item> */}
+            <Menu.Item as={Link} to='/'>
+              Events
+            </Menu.Item>
         </Container>
       </Menu>
     </Segment>

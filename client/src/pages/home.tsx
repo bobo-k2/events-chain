@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Container, Header, Button, Icon, Segment, SemanticICONS } from 'semantic-ui-react';
+import { Container, Header, Button, Icon, Segment, SemanticICONS, Card } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/page-layout';
-import eventFactoryContract from '../event-factory';
+import EventCard from '../components/event-card';
 
 const Home: React.FC = () => {
   const buttonIcon: SemanticICONS = 'arrow right';
@@ -14,9 +14,19 @@ const Home: React.FC = () => {
   }, [])
 
   const getEvents = async () => {
-    const e = await eventFactoryContract.getEvents();
-    setEvents(e);
+    const response = await fetch('/api/events')  
+    const body = await response.json();
+    setEvents(body);
   }
+
+  const renderEvents = () => events.map(
+    (event) => (
+      <EventCard
+        event={event}
+        key={`event-${event.id}`}
+      />
+    ),
+  );
 
   return (
     <PageLayout>
@@ -43,20 +53,20 @@ const Home: React.FC = () => {
               marginTop: '1em',
             }}
           />
-          <Link to='events/new'>
-            <Button
-              primary
-              size='huge'
-              style={{marginBottom: '2em'}}
-            >
-              Create 
-              <Icon name={buttonIcon} />
-            </Button>
-          </Link>
+          <Button as={Link} to='events/new'
+            primary
+            size='huge'
+            style={{marginBottom: '2em'}}
+          >
+            Create 
+            <Icon name={buttonIcon} />
+          </Button>
         </Container>
       </Segment>
       <Container>
-        {events}
+        <Card.Group centered>
+          {renderEvents()}
+        </Card.Group>
       </Container>
     </PageLayout>
   )
