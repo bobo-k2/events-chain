@@ -1,8 +1,10 @@
 import express from 'express';
-import json from 'body-parser';
+import bodyParser from 'body-parser';
+import { eventRouter } from './routes/events';
 
 const app = express();
-app.use(json());
+app.use(bodyParser.json());
+app.use(eventRouter);
 
 app.listen(3001, () => {
   console.log('Server is listening on port 3001')
