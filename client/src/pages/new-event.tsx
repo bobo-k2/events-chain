@@ -6,10 +6,11 @@ import { DateTimeInput } from 'semantic-ui-calendar-react';
 import PageLayout from '../components/page-layout';
 import ValidationError from '../components/validation-error';
 import { IEventInfo, IEventDbInfo } from '../data/event-info';
-import eventFactoryContract from '../event-factory';
+import eventFactoryContract from '../event-factory-contract';
 import { signer } from '../web3';
+import { WalletProps } from '../data/wallet-props';
 
-const NewEvent: React.FC = () => {
+const NewEvent: React.FC<WalletProps> = (props) => {
   const {
     control,
     setValue,
@@ -28,9 +29,6 @@ const NewEvent: React.FC = () => {
       await eventFactoryContract
         .connect(signer)
         .createEvent(
-          data.name,
-          data.venue,
-          Date.parse(data.date),
           data.ticketPrice,
           data.ticketsCount
         );
@@ -44,8 +42,6 @@ const NewEvent: React.FC = () => {
         contractAddress: events[events.length - 1]
       };
 
-      console.log(requestData);
-      
       await fetch('/api/events', {
         method: 'post',
         headers: new Headers({
@@ -68,7 +64,7 @@ const NewEvent: React.FC = () => {
   }
 
   return (
-    <PageLayout>
+    <PageLayout {...props}>
       <Container style={{marginTop: 40}}>
         <h2>Create a New Event</h2>
         <Form onSubmit={handleSubmit(createEvent)} error={!!errorMessage}>

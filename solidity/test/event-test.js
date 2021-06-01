@@ -9,17 +9,15 @@ let user2;
 
 describe("Event contract", () => {
   beforeEach(async () => {
+    [manager, user, user2] = await ethers.getSigners();
     const Event = await ethers.getContractFactory("Event");
+
     event = await Event.deploy(
-      "Boysetsfire",
-      "Hollywood Palladium",
-      new Date().getTime(),
       100,
-      1
+      1,
+      manager.address
     );
     await event.deployed();
-  
-    [manager, user, user2] = await ethers.getSigners();
   });
 
   describe("Contract deployment", () => {
@@ -32,9 +30,6 @@ describe("Event contract", () => {
     });
     
     it("initializes contract with proper values", async () => {
-      expect(await event.name()).to.equal("Boysetsfire");
-      expect(await event.venue()).to.equal("Hollywood Palladium");
-      expect(await event.ticketPrice()).to.equal(100);
       expect(await event.ticketsAvailable()).to.equal(1);
     });
   });

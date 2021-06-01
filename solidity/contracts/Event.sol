@@ -5,9 +5,6 @@ pragma solidity ^0.8.4;
 /// @title An event contract
 contract Event {
   address public manager;
-  string public name;
-  uint public date;
-  string public venue;
   uint public ticketPrice;
   uint16 public ticketsAvailable;
   uint16 public ticketsSold;
@@ -17,17 +14,12 @@ contract Event {
   event TicketTransfered(uint16 ticketId, address from, address to);
 
   constructor(
-    string memory _name,
-    string memory _venue,
-    uint _date,
     uint _ticketPrice,
-    uint16 _ticketsAvailable
+    uint16 _ticketsAvailable,
+    address _manager
   ) {
-    manager = msg.sender;
-    name = _name;
-    date = _date;
-    venue = _venue;
-    setTicketPrice(_ticketPrice);
+    manager = _manager;
+    ticketPrice = _ticketPrice ;
     ticketsAvailable = _ticketsAvailable;
   }
 
@@ -38,7 +30,7 @@ contract Event {
 
   /// Sets the event ticket price.
   /// @param _newPrice The new ticket price
-  function setTicketPrice(uint _newPrice) public managerOnly {
+  function setTicketPrice(uint _newPrice) external managerOnly {
     ticketPrice = _newPrice;
   }
 

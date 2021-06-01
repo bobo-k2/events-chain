@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "npx hardhat compile",
     "test": "npx hardhat test",
-    "deploy-factory-contract": "npx hardhat run scripts/deploy.js --network ropsten"
+    "deploy": "npx hardhat run scripts/deploy.js --network ropsten"
   },
   "author": "Bobo K.",
   "license": "ISC",

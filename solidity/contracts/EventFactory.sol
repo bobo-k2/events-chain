@@ -10,18 +10,13 @@ contract EventFactory {
   uint16 public eventsCount;
 
   function createEvent(
-    string memory _name,
-    string memory _venue,
-    uint _date,
     uint _ticketPrice,
     uint16 _ticketsAvailable
   ) external returns(address) {
     Event newEvent = new Event(
-      _name,
-      _venue,
-      _date,
       _ticketPrice,
-      _ticketsAvailable
+      _ticketsAvailable,
+      msg.sender
     );
     events.push(address(newEvent));
     eventsCount ++;

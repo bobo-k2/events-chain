@@ -25,9 +25,6 @@ describe("EventFactory contract", () => {
 
     beforeEach(async () => {
       eventAddress = await factory.connect(manager).createEvent(
-        "test",
-        "test v",
-        111100000,
         100,
         1000
       );
@@ -36,11 +33,6 @@ describe("EventFactory contract", () => {
     it("increments events count", async () => {
       let count = await factory.eventsCount();
       expect(count).to.equal(1);
-    });
-
-    it("returns new event address", async () => {
-      console.log(eventAddress);
-      expect(eventAddress).to.be.properAddress;
     });
   });
 });

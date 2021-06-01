@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card } from 'semantic-ui-react';
 import { IEventDbInfo } from '../data/event-info';
 
-const EventCard: React.FC<Props> = ({ event }) => {
+const EventCard: React.FC<Props> = ({ event, onBuyTicket, isWalletConnected }) => {
   const eventDate = new Date(event.date);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleBuyTicket = () => {
+    try {
+      setLoading(true)
+      onBuyTicket(event);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return(
     <Card>
@@ -16,7 +26,13 @@ const EventCard: React.FC<Props> = ({ event }) => {
         {event.ticketPrice} wei <br/>
       </Card.Content>
       <Card.Content extra textAlign="right">
-        <Button color='green'>Buy Ticket</Button>
+        <Button
+          color='green'
+          onClick={handleBuyTicket}
+          content='Buy Ticket'
+          loading={loading}
+          disabled={!isWalletConnected}
+        />
       </Card.Content>
     </Card>
   )
@@ -24,6 +40,8 @@ const EventCard: React.FC<Props> = ({ event }) => {
 
 type Props = {
   event: IEventDbInfo;
+  onBuyTicket: (event: IEventDbInfo) => void;
+  isWalletConnected: boolean;
 }
 
 export default EventCard;

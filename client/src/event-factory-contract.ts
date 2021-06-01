@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import contractJson from './contracts/EventFactory.json';
 import { provider } from './web3';
 
-const contractAddress = '0x9611e67E32DDFBB082f9d04c0ac866c7ba69E270';
+const contractAddress = '0x443F7474158cA832A8baCB8508293920DC2101f8';
 
 const eventFactoryContract = new ethers.Contract(
   contractAddress,
