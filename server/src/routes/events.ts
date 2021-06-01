@@ -14,6 +14,16 @@ router.get('/api/events', [], async (req: Request, res: Response, next: NextFunc
   }
 });
 
+router.get('/api/events/:id', [], async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id: number = parseInt(req.params.id);
+    const eventsRepo = new EventRepository();
+    res.send(await eventsRepo.getEvent(id));
+  } catch(err) {
+    next(err);
+  }
+});
+
 router.post('/api/events', [], async (req: Request<Event>, res: Response, next: NextFunction) => {
   try {
     console.log(req);

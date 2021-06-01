@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Header, Button, Icon, Segment, SemanticICONS, Card } from 'semantic-ui-react';
+import { Container, Header, Button, Icon, Segment, SemanticICONS, Card, Message } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/page-layout';
 import EventCard from '../components/event-card';
@@ -35,13 +35,13 @@ const Home: React.FC<WalletProps> = (props) => {
     ),
   );
 
-  const handleBuyTicket = async (event: IEventDbInfo) => {
+  const handleBuyTicket = async (event: IEventDbInfo): Promise<void> => {
     try {
+      setErrorMessage('');
       const transaction = await eventContract(event.contractAddress)
         .connect(signer)
         .buyTicket({value: event.ticketPrice});
-      const ticketId: number = await transaction.wait();
-      console.log(ticketId);
+      await transaction.wait();
     } catch (err) {
       setErrorMessage(err.message);
     }
@@ -84,6 +84,13 @@ const Home: React.FC<WalletProps> = (props) => {
         </Container>
       </Segment>
       <Container>
+        <Message
+          error
+          header="Oops!"
+          content={errorMessage}
+          hidden={errorMessage === ''}
+          style={{wordWrap: 'break-word'}}
+        />
         <Card.Group centered>
           {renderEvents()}
         </Card.Group>

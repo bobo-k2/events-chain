@@ -57,7 +57,13 @@ describe("Event contract", () => {
     it("can buy ticket", async() => {
       await expect(() => event.connect(user).buyTicket({value: "100"}))
         .to.changeEtherBalance(event, 100);
-      expect(await event.connect(user).hasTicket(1)).to.equal(true);
+      expect(await event.connect(user).hasTicket(0)).to.equal(true);
+    });
+
+    it("ticket is added to user address when bought", async() => {
+      await event.connect(user).buyTicket({value: "100"});
+      const tickets = await event.getTicketsForUser(user.address);
+      expect(tickets).to.have.all.members([0]);
     });
 
     it("raises event when ticket bought", async () => {
@@ -67,32 +73,32 @@ describe("Event contract", () => {
     });
   });
 
-  describe("Transfer", () => {
-    beforeEach(async () => {
-      await event.connect(user).buyTicket({value: "100"});
-    });
+  // describe("Transfer", () => {
+  //   beforeEach(async () => {
+  //     await event.connect(user).buyTicket({value: "100"});
+  //   });
 
-    it("can transfer ticket", async() => {
-      await event.connect(user).transferTicket(1, user2.address);  
-      expect(await event.connect(user2).hasTicket(1)).to.equal(true);    
-    });
+  //   it("can transfer ticket", async() => {
+  //     await event.connect(user).transferTicket(1, user2.address);  
+  //     expect(await event.connect(user2).hasTicket(1)).to.equal(true);    
+  //   });
 
-    it("raises event when ticket transfered", async () => {
-      await expect(event.connect(user).transferTicket(1, user2.address))
-        .to.emit(event, "TicketTransfered")
-        .withArgs(1, user.address, user2.address);
-    });
+  //   it("raises event when ticket transfered", async () => {
+  //     await expect(event.connect(user).transferTicket(1, user2.address))
+  //       .to.emit(event, "TicketTransfered")
+  //       .withArgs(1, user.address, user2.address);
+  //   });
 
-    it("can't transfer ticket if not the owner", async() => {
-      await expect(
-        event.connect(user).connect(user2).transferTicket(1, user.address)
-      ).to.be.revertedWith("Ticket not owned by the sender");   
-    });
+  //   it("can't transfer ticket if not the owner", async() => {
+  //     await expect(
+  //       event.connect(user).connect(user2).transferTicket(1, user.address)
+  //     ).to.be.revertedWith("Ticket not owned by the sender");   
+  //   });
 
-    it("can transfer ticket funds from the contract to owner", async() => {
-      await expect(() => event.connect(manager).withdrawFunds())
-        .to.changeEtherBalance(event, -100);
-      // TODO check manager balance changeEtherBalance doens't work
-    });
-  });
+  //   it("can transfer ticket funds from the contract to owner", async() => {
+  //     await expect(() => event.connect(manager).withdrawFunds())
+  //       .to.changeEtherBalance(event, -100);
+  //     // TODO check manager balance changeEtherBalance doens't work
+  //   });
+  // });
 });

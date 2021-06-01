@@ -21,17 +21,18 @@ const NewEvent: React.FC<WalletProps> = (props) => {
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const createEvent: SubmitHandler<IEventInfo> = async (data) => {
+  const createEvent: SubmitHandler<IEventInfo> = async (data): Promise<void> => {
     setLoading(true);
     setErrorMessage('');
 
     try {
-      await eventFactoryContract
+      const transaction = await eventFactoryContract
         .connect(signer)
         .createEvent(
           data.ticketPrice,
           data.ticketsCount
         );
+      await transaction.wait();
       const events: string[] = await eventFactoryContract.getEvents();
       
       let requestData: IEventDbInfo = {
@@ -82,7 +83,7 @@ const NewEvent: React.FC<WalletProps> = (props) => {
             name='date'
             control={control}
             rules={{ required: true }}
-            render={({ field }) => <DateTimeInput {...field} onChange={handleDateChange} dateFormat='yyyy-MM-DD' /> }
+            render={({ field }) => <DateTimeInput {...field} onChange={handleDateChange} dateFormat='yyyy-MM-DD' minDate={new Date().toDateString()} /> }
           />
           
           <ValidationError error={errors.date} message='Event date is required.' />

@@ -24,6 +24,20 @@ class EventRepository {
       await client.$disconnect();
     }
   }
+
+  async getEvent(id: number): Promise<Event | null> {
+    const client = new PrismaClient();
+
+    try {
+      return await client.event.findUnique({
+        where: {
+          id
+        }
+      });
+    } finally {
+      await client.$disconnect();
+    }
+  }
 }
 
 export default EventRepository;

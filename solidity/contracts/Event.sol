@@ -9,6 +9,7 @@ contract Event {
   uint16 public ticketsAvailable;
   uint16 public ticketsSold;
   mapping(uint16 => address) public tickets;
+  mapping(address => uint16) public userTicketsCount;
 
   event TicketBought(address sender, address buyer);
   event TicketTransfered(uint16 ticketId, address from, address to);
@@ -40,9 +41,10 @@ contract Event {
   function buyTicket() external payable returns(uint16) {
     require(msg.value >= ticketPrice, "Funds sent are lower than ticket price");
     require(ticketsSold < ticketsAvailable, "No tickets available");
-
-    ticketsSold += 1; //TODO use SafeMath
+    
     tickets[ticketsSold] = msg.sender;
+    userTicketsCount[msg.sender] = userTicketsCount[msg.sender] + 1; 
+    ticketsSold += 1; //TODO use SafeMath
     emit TicketBought(address(this), msg.sender);
 
     return ticketsSold;   
@@ -62,6 +64,19 @@ contract Event {
   /// Withdraw funds from the contract account to the owner account.
   function withdrawFunds() external payable managerOnly() {
     payable(msg.sender).transfer(address(this).balance);
+  }
+
+  function getTicketsForUser(address _user) external view returns(uint16[] memory) {
+    uint16[] memory result = new uint16[](userTicketsCount[_user]);
+    uint counter = 0;
+
+    for (uint16 i = 0; i < ticketsSold; i++) {
+      if (tickets[i] == _user) {
+        result[counter] = i;
+        counter++;
+      }
+    }
+    return result;
   }
 
   /// Checks if sender owns the ticket.

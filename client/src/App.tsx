@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Route, Switch } from 'react-router';
+import EventDetails from './pages/event-details';
 import Home from './pages/home';
 import NewEvent from './pages/new-event';
 
@@ -13,8 +14,7 @@ const App: React.FC = () => {
     if(typeof window.ethereum !== 'undefined') {
       setConnectingWallet(true);
       try{
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        console.log(accounts);
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
         setWalletConnected(true);
       } catch {
         console.log('User canceled Metamask connection');
@@ -26,21 +26,22 @@ const App: React.FC = () => {
     }
   }
 
+  const getProps = {
+    isConnectingWallet: connectingWallet,
+    isWalletConnected: walletConnected,
+    onWalletConnect: connectWallet
+  }
+
   return (
     <Switch>
       <Route path="/events/new">
-        <NewEvent
-          isConnectingWallet={connectingWallet}
-          isWalletConnected={walletConnected}
-          onWalletConnect={connectWallet}
-        />
+        <NewEvent {...getProps}/>
+      </Route>      
+      <Route path="/events/:address">
+        <EventDetails {...getProps}/>
       </Route>      
       <Route path="/">
-        <Home
-          isConnectingWallet={connectingWallet}
-          isWalletConnected={walletConnected}
-          onWalletConnect={connectWallet}
-        />
+        <Home {...getProps}/>
       </Route>      
     </Switch>
   );

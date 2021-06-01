@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Card } from 'semantic-ui-react';
 import { IEventDbInfo } from '../data/event-info';
 
@@ -6,10 +7,10 @@ const EventCard: React.FC<Props> = ({ event, onBuyTicket, isWalletConnected }) =
   const eventDate = new Date(event.date);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleBuyTicket = () => {
+  const handleBuyTicket = async (): Promise<void> => {
     try {
       setLoading(true)
-      onBuyTicket(event);
+      await onBuyTicket(event);
     } finally {
       setLoading(false);
     }
@@ -26,6 +27,12 @@ const EventCard: React.FC<Props> = ({ event, onBuyTicket, isWalletConnected }) =
         {event.ticketPrice} wei <br/>
       </Card.Content>
       <Card.Content extra textAlign="right">
+        <Button
+          as={Link}
+          to={`/events/${event.contractAddress}`}
+          content='Details'
+          disabled={!isWalletConnected}
+        />
         <Button
           color='green'
           onClick={handleBuyTicket}
