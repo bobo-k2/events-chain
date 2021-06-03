@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from 'semantic-ui-react';
 import { WalletProps } from '../data/wallet-props';
 import eventContract from '../event-contract';
 import { signer } from '../web3';
 
 const BuyTicket: React.FC<BuyTicketProps> = (props) => {
+  const [inProgress, setInProgress] = useState<boolean>(false);
+
   const handleBuyTicket = async (): Promise<void> => {
+    setInProgress(true);
     try {
       const transaction = await eventContract(props.contractAddress)
         .connect(signer)
@@ -15,6 +18,7 @@ const BuyTicket: React.FC<BuyTicketProps> = (props) => {
     } catch (err) {
       props.onError(err.message);
     }
+    setInProgress(false);
   }
 
   return(
@@ -22,7 +26,7 @@ const BuyTicket: React.FC<BuyTicketProps> = (props) => {
       color='green'
       onClick={handleBuyTicket}
       content='Buy Ticket'
-      loading={props.isConnectingWallet}
+      loading={inProgress}
       disabled={!props.isWalletConnected}
     />
   );
@@ -30,7 +34,7 @@ const BuyTicket: React.FC<BuyTicketProps> = (props) => {
 
 type BuyTicketProps = WalletProps & {
   contractAddress: string;
-  ticketPrice: number;
+  ticketPrice: string;
   onSuccess: () => void;
   onError: (message: string) => void;
 }

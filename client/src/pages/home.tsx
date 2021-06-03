@@ -24,6 +24,7 @@ const Home: React.FC<WalletProps> = (props) => {
         event={event}
         key={`event-${event.id}`}
         isWalletConnected={props.isWalletConnected}
+        isConnectingWallet={props.isConnectingWallet}
       />
     ),
   );

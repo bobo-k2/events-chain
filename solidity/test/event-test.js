@@ -98,7 +98,7 @@ describe("Event contract", () => {
     it("can transfer ticket funds from the contract to owner", async() => {
       await expect(() => event.connect(manager).withdrawFunds())
         .to.changeEtherBalance(event, -100);
-      // TODO check manager balance changeEtherBalance doens't work
+      // TODO check manager balance changeEtherBalance doesn't work
     });
   });
 });

@@ -3,29 +3,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, Message } from 'semantic-ui-react';
 import { IEventDbInfo } from '../data/event-info';
-import eventContract from '../event-contract';
-import { signer } from '../web3';
+import BuyTicket from './buy-ticket';
 
-const EventCard: React.FC<Props> = ({ event, isWalletConnected }) => {
+const EventCard: React.FC<Props> = ({ event, isWalletConnected, isConnectingWallet }) => {
   const eventDate = new Date(event.date);
-  const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-
-  const handleBuyTicket = async (): Promise<void> => {
-    setLoading(true);
-    setErrorMessage('');
-    try {
-      
-      const transaction = await eventContract(event.contractAddress)
-        .connect(signer)
-        .buyTicket({value: event.ticketPrice});
-      await transaction.wait();
-    } catch (err) {
-      setErrorMessage(err.message);
-    }
-
-    setLoading(false);
-  }
 
   return(
     <Card>
@@ -44,12 +26,14 @@ const EventCard: React.FC<Props> = ({ event, isWalletConnected }) => {
           content='Details'
           disabled={!isWalletConnected}
         />
-        <Button
-          color='green'
-          onClick={handleBuyTicket}
-          content='Buy Ticket'
-          loading={loading}
-          disabled={!isWalletConnected || loading}
+        <BuyTicket
+          isWalletConnected = {isWalletConnected}
+          contractAddress = {event.contractAddress}
+          isConnectingWallet = {isConnectingWallet}
+          ticketPrice = {event.ticketPrice}
+          onError = {(error) => setErrorMessage(error)}
+          onSuccess = {() => {}}
+          onWalletConnect = {() => {}}
         />
         <Message
           error
@@ -66,6 +50,7 @@ const EventCard: React.FC<Props> = ({ event, isWalletConnected }) => {
 type Props = {
   event: IEventDbInfo;
   isWalletConnected: boolean;
+  isConnectingWallet: boolean;
 }
 
 export default EventCard;
