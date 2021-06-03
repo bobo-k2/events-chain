@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
-import { Button } from 'semantic-ui-react';
+import React, { Fragment, useState } from 'react';
+import { Button, Message } from 'semantic-ui-react';
 import { WalletProps } from '../data/wallet-props';
 import eventContract from '../event-contract';
 import { signer } from '../web3';
 
 const BuyTicket: React.FC<BuyTicketProps> = (props) => {
   const [inProgress, setInProgress] = useState<boolean>(false);
+  const [ticketBought, setTicketBought] = useState<boolean>(false);
 
   const handleBuyTicket = async (): Promise<void> => {
     setInProgress(true);
+    setTicketBought(false);
     try {
       const transaction = await eventContract(props.contractAddress)
         .connect(signer)
         .buyTicket({value: props.ticketPrice});
       await transaction.wait();
+      setTicketBought(true);
       props.onSuccess();
     } catch (err) {
       props.onError(err.message);
@@ -22,13 +25,20 @@ const BuyTicket: React.FC<BuyTicketProps> = (props) => {
   }
 
   return(
-    <Button
-      color='green'
-      onClick={handleBuyTicket}
-      content='Buy Ticket'
-      loading={inProgress}
-      disabled={!props.isWalletConnected}
-    />
+    <Fragment>
+      <Button
+        color='green'
+        onClick={handleBuyTicket}
+        content='Buy Ticket'
+        loading={inProgress}
+        disabled={!props.isWalletConnected}
+      />
+      <Message
+        content='Ticket bought'
+        color='green'
+        hidden={!ticketBought}  
+      />
+    </Fragment>
   );
 }
 

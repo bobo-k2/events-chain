@@ -90,7 +90,15 @@ const NewEvent: React.FC<WalletProps> = (props) => {
             name='date'
             control={control}
             rules={{ required: true }}
-            render={({ field }) => <DateTimeInput {...field} onChange={handleDateChange} dateFormat='yyyy-MM-DD' minDate={new Date().toDateString()} /> }
+            render={({ field }) => 
+              <DateTimeInput
+                {...field}
+                onChange={handleDateChange}
+                dateFormat='yyyy-MM-DD'
+                minDate={new Date()}
+                value=''
+              />
+            }
           />
           
           <ValidationError error={errors.date} message='Event date is required.' />

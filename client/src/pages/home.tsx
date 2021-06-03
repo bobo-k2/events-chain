@@ -66,7 +66,7 @@ const Home: React.FC<WalletProps> = (props) => {
         </Container>
       </Segment>
       <Container>
-        <Card.Group centered>
+        <Card.Group>
           {renderEvents()}
         </Card.Group>
       </Container>

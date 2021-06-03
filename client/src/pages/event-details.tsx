@@ -68,13 +68,14 @@ const EventDetails: React.FC<WalletProps> = (props) => {
   }
 
   const renderTickets = () => (
-    <List divided verticalAlign='middle'>
+    <List divided>
       {ticketsBought.map((ticket: TicketInfo, index: number) =>(
         <List.Item key={`item-${ticket.id}`}>
           <List.Content floated='right'>
             <Input
               value={ticket.transferTo}
               onChange={(e) => setTransferAddress(e.target.value, index)}
+              placeholder='Enter receiver address'
               action={{
                 color: 'green',
                 content: 'Transfer',
@@ -114,8 +115,8 @@ const EventDetails: React.FC<WalletProps> = (props) => {
             <Grid.Column><b>{ethers.utils.formatEther(ticketPrice)}</b> ETH</Grid.Column>
           </Grid.Row>
 
-          <Grid.Row verticalAlign='middle'>
-            <Grid.Column verticalAlign='top' width={4}>Tickets</Grid.Column>
+          <Grid.Row verticalAlign='top'>
+            <Grid.Column width={4}>Tickets bought</Grid.Column>
             <Grid.Column>
               {ticketsBought.length > 0 && renderTickets()}
               {ticketsBought.length === 0 &&
