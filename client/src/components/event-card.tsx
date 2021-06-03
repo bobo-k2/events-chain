@@ -1,19 +1,30 @@
+import { ethers } from 'ethers';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card } from 'semantic-ui-react';
+import { Button, Card, Message } from 'semantic-ui-react';
 import { IEventDbInfo } from '../data/event-info';
+import eventContract from '../event-contract';
+import { signer } from '../web3';
 
-const EventCard: React.FC<Props> = ({ event, onBuyTicket, isWalletConnected }) => {
+const EventCard: React.FC<Props> = ({ event, isWalletConnected }) => {
   const eventDate = new Date(event.date);
   const [loading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleBuyTicket = async (): Promise<void> => {
+    setLoading(true);
+    setErrorMessage('');
     try {
-      setLoading(true)
-      await onBuyTicket(event);
-    } finally {
-      setLoading(false);
+      
+      const transaction = await eventContract(event.contractAddress)
+        .connect(signer)
+        .buyTicket({value: event.ticketPrice});
+      await transaction.wait();
+    } catch (err) {
+      setErrorMessage(err.message);
     }
+
+    setLoading(false);
   }
 
   return(
@@ -24,9 +35,9 @@ const EventCard: React.FC<Props> = ({ event, onBuyTicket, isWalletConnected }) =
       </Card.Content>
       <Card.Content extra>
         {eventDate.toDateString()} <br/>
-        {event.ticketPrice} wei <br/>
+        {ethers.utils.formatEther(event.ticketPrice).toString()} ETH <br/>
       </Card.Content>
-      <Card.Content extra textAlign="right">
+      <Card.Content extra>
         <Button
           as={Link}
           to={`/events/${event.contractAddress}`}
@@ -38,7 +49,14 @@ const EventCard: React.FC<Props> = ({ event, onBuyTicket, isWalletConnected }) =
           onClick={handleBuyTicket}
           content='Buy Ticket'
           loading={loading}
-          disabled={!isWalletConnected}
+          disabled={!isWalletConnected || loading}
+        />
+        <Message
+          error
+          header="Oops!"
+          content={errorMessage}
+          hidden={errorMessage === ''}
+          style={{wordWrap: 'break-word'}}
         />
       </Card.Content>
     </Card>
@@ -47,7 +65,6 @@ const EventCard: React.FC<Props> = ({ event, onBuyTicket, isWalletConnected }) =
 
 type Props = {
   event: IEventDbInfo;
-  onBuyTicket: (event: IEventDbInfo) => void;
   isWalletConnected: boolean;
 }
 

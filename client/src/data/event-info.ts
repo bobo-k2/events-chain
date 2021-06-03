@@ -3,7 +3,7 @@ interface IEventInfo {
   name: string;
   venue: string;
   date: string;
-  ticketPrice: number;
+  ticketPrice: string;
   ticketsCount: number;  
 }
 
@@ -11,7 +11,7 @@ interface IEventDbInfo {
   name: string;
   venue: string;
   date: number;
-  ticketPrice: number;
+  ticketPrice: string;
   contractAddress: string;
 }
 

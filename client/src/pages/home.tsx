@@ -1,18 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Container, Header, Button, Icon, Segment, SemanticICONS, Card, Message } from 'semantic-ui-react';
+import { Container, Header, Button, Icon, Segment, Card } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import PageLayout from '../components/page-layout';
 import EventCard from '../components/event-card';
-import { IEventDbInfo } from '../data/event-info';
-import eventContract from '../event-contract';
-import { signer } from '../web3';
 import { WalletProps } from '../data/wallet-props';
 
 const Home: React.FC<WalletProps> = (props) => {
-  const buttonIcon: SemanticICONS = 'arrow right';
-
   const [events, setEvents] = useState<any[]>([]);
-  const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
     getEvents();
@@ -28,24 +22,11 @@ const Home: React.FC<WalletProps> = (props) => {
     (event) => (
       <EventCard
         event={event}
-        onBuyTicket={handleBuyTicket}
         key={`event-${event.id}`}
         isWalletConnected={props.isWalletConnected}
       />
     ),
   );
-
-  const handleBuyTicket = async (event: IEventDbInfo): Promise<void> => {
-    try {
-      setErrorMessage('');
-      const transaction = await eventContract(event.contractAddress)
-        .connect(signer)
-        .buyTicket({value: event.ticketPrice});
-      await transaction.wait();
-    } catch (err) {
-      setErrorMessage(err.message);
-    }
-  }
 
   return (
     <PageLayout {...props}>
@@ -79,18 +60,11 @@ const Home: React.FC<WalletProps> = (props) => {
             disabled={!props.isWalletConnected}
           >
             Create 
-            <Icon name={buttonIcon} />
+            <Icon name='arrow right' />
           </Button>
         </Container>
       </Segment>
       <Container>
-        <Message
-          error
-          header="Oops!"
-          content={errorMessage}
-          hidden={errorMessage === ''}
-          style={{wordWrap: 'break-word'}}
-        />
         <Card.Group centered>
           {renderEvents()}
         </Card.Group>

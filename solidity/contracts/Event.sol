@@ -1,9 +1,13 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.4;
 
+import "./SafeMath.sol";
+
 /// @author Bobo K.
 /// @title An event contract
 contract Event {
+  using SafeMath16 for uint16;
+
   address public manager;
   uint public ticketPrice;
   uint16 public ticketsAvailable;
@@ -43,8 +47,8 @@ contract Event {
     require(ticketsSold < ticketsAvailable, "No tickets available");
     
     tickets[ticketsSold] = msg.sender;
-    userTicketsCount[msg.sender] = userTicketsCount[msg.sender] + 1; 
-    ticketsSold += 1; //TODO use SafeMath
+    userTicketsCount[msg.sender] = userTicketsCount[msg.sender].add(1); 
+    ticketsSold = ticketsSold.add(1);
     emit TicketBought(address(this), msg.sender);
 
     return ticketsSold;   
@@ -58,6 +62,9 @@ contract Event {
     require(_to != address(0), "Transfer to the zero address not allowed");
 
     tickets[_ticketId] = _to;
+    userTicketsCount[msg.sender] = userTicketsCount[msg.sender].sub(1);
+    userTicketsCount[_to] = userTicketsCount[_to].add(1);
+
     emit TicketTransfered(_ticketId, msg.sender, _to);
   }
 
@@ -68,12 +75,12 @@ contract Event {
 
   function getTicketsForUser(address _user) external view returns(uint16[] memory) {
     uint16[] memory result = new uint16[](userTicketsCount[_user]);
-    uint counter = 0;
+    uint16 counter = 0;
 
     for (uint16 i = 0; i < ticketsSold; i++) {
       if (tickets[i] == _user) {
         result[counter] = i;
-        counter++;
+        counter = counter.add(1);
       }
     }
     return result;

@@ -9,6 +9,7 @@ import { IEventInfo, IEventDbInfo } from '../data/event-info';
 import eventFactoryContract from '../event-factory-contract';
 import { signer } from '../web3';
 import { WalletProps } from '../data/wallet-props';
+import { ethers } from 'ethers';
 
 const NewEvent: React.FC<WalletProps> = (props) => {
   const {
@@ -21,24 +22,30 @@ const NewEvent: React.FC<WalletProps> = (props) => {
   const history = useHistory();
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  
   const createEvent: SubmitHandler<IEventInfo> = async (data): Promise<void> => {
     setLoading(true);
     setErrorMessage('');
 
     try {
+      console.log(ethers.utils.parseEther(data.ticketPrice).toString());
+      const ticketPrice = ethers.utils.parseEther(data.ticketPrice).toString();
+
       const transaction = await eventFactoryContract
         .connect(signer)
         .createEvent(
-          data.ticketPrice,
+          ticketPrice,
           data.ticketsCount
         );
       await transaction.wait();
+
+      // TODO not the best idea, see how to get address of deployed Event contract.
       const events: string[] = await eventFactoryContract.getEvents();
       
       let requestData: IEventDbInfo = {
         name: data.name,
         venue: data.venue,
-        ticketPrice: data.ticketPrice,
+        ticketPrice,
         date: Date.parse(data.date),
         contractAddress: events[events.length - 1]
       };
@@ -90,9 +97,10 @@ const NewEvent: React.FC<WalletProps> = (props) => {
 
           <label>Ticket price</label>
           <Input
-            label="wei"
+            label="ETH"
             labelPosition="right"
             type='number'
+            step='0.000000000000000001'
             {...register('ticketPrice', { required:true })}
           />
           <ValidationError error={errors.ticketPrice} message='Ticket price is required.' />
