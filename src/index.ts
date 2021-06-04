@@ -8,6 +8,8 @@ app.use(bodyParser.json());
 app.use(eventRouter);
 app.use(uiRouter);
 
-app.listen(3001, () => {
-  console.log('Server is listening on port 3001')
+let listenPort = process.env.PORT || 3000;
+
+app.listen(listenPort, () => {
+  console.log('Server is listening on port ', listenPort);
 });
