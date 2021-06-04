@@ -1,1 +1,3 @@
-solidity/scripts/secrets.js
+node_modules
+
+./solidity/scripts/secrets.js
