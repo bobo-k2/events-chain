@@ -8,12 +8,13 @@ const ValidationError: React.FC<Props> = ({
 }) => {
   return(
     <Fragment>
-      {error && 
-        <Message icon color='red'>
-          <Message.Content>
-            {message}
-          </Message.Content>
-        </Message>
+      {error 
+        ? <Message icon color='red'>
+            <Message.Content>
+              {message}
+            </Message.Content>
+          </Message>
+        : null
       }
     </Fragment>
   );

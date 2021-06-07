@@ -2,10 +2,17 @@ import { ethers } from 'ethers';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, Message } from 'semantic-ui-react';
-import { IEventDbInfo } from '../data/event-info';
-import BuyTicket from './buy-ticket';
+import { IEventDbInfo } from '../../../data/event-info';
+import BuyTicket from '../../common/components/buy-ticket';
 
-const EventCard: React.FC<Props> = ({ event, isWalletConnected, isConnectingWallet }) => {
+const EventCard: React.FC<Props> = ({
+  event = {
+    contractAddress: '',
+    date: 0,
+    ticketPrice: '0',
+  },
+  isWalletConnected = false,
+  isConnectingWallet = false }) => {
   const eventDate = new Date(event.date);
   const [errorMessage, setErrorMessage] = useState<string>('');
 

@@ -1,23 +1,22 @@
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { Container, Grid, Icon, Input, List, Message } from 'semantic-ui-react';
-import BuyTicket from '../components/buy-ticket';
-import PageLayout from '../components/page-layout';
-import { WalletProps } from '../data/wallet-props';
-import eventContract from '../event-contract';
-import { signer } from '../web3';
+import { Container, Grid, Message } from 'semantic-ui-react';
+import BuyTicket from '../../common/components/buy-ticket';
+import PageLayout from '../../common/components/page-layout';
+import Tickets, { TicketInfo } from './tickets';
+import { WalletProps } from '../../../data/wallet-props';
+import eventContract from '../../../event-contract';
+import { signer } from '../../../web3';
 
 declare const window: any;
 
 const EventDetails: React.FC<WalletProps> = (props) => {
   const { address: contractAddress } = useParams<EventDetailsParams>();
-  const [ticketsBought, setTicketsBought] = useState<TicketInfo[]>([]);
+  const [tickets, setTickets] = useState<number[]>([]);
   const [ticketPrice, setTicketprice] = useState<BigNumber>(BigNumber.from('0'));
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const canTransfer = (index: number) => 
-    ticketsBought.length > 0 && props.isWalletConnected && ticketsBought[index].transferTo !== '';  
 
   useEffect(() => {
     getEvent();
@@ -27,22 +26,14 @@ const EventDetails: React.FC<WalletProps> = (props) => {
     setErrorMessage('');
     try{
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const tickets = await eventContract(contractAddress).getTicketsForUser(accounts[0]);
+      setTickets(await eventContract(contractAddress).getTicketsForUser(accounts[0]));
       setTicketprice(await eventContract(contractAddress).ticketPrice());
-
-      setTicketsBought(tickets.map((ticket: number) => {
-        return {
-          id: ticket,
-          transferTo: ''
-        }
-      }));
     } catch (err) {
       setErrorMessage(err.message);
     }
   }
 
-  const transferTicket = async (index: number): Promise<void> => {
-    const ticket: TicketInfo = ticketsBought[index];
+  const transferTicket = async (ticket: TicketInfo): Promise<void> => {
     setErrorMessage('');
     setIsLoading(true);
 
@@ -58,42 +49,6 @@ const EventDetails: React.FC<WalletProps> = (props) => {
 
     setIsLoading(false);
   }
-
-  const setTransferAddress = (address: string, index: number): void => {
-    setTicketsBought([
-      ...ticketsBought.slice(0,index),
-      Object.assign({}, ticketsBought[index], {transferTo: address}),
-      ...ticketsBought.slice(index+1)
-    ]);
-  }
-
-  const renderTickets = () => (
-    <List divided>
-      {ticketsBought.map((ticket: TicketInfo, index: number) =>(
-        <List.Item key={`item-${ticket.id}`}>
-          <List.Content floated='right'>
-            <Input
-              value={ticket.transferTo}
-              onChange={(e) => setTransferAddress(e.target.value, index)}
-              placeholder='Enter receiver address'
-              action={{
-                color: 'green',
-                content: 'Transfer',
-                disabled: !canTransfer(index),
-                loading: isLoading,
-                onClick: () => transferTicket(index)
-              }}
-              style={{
-                width: 450
-              }}
-            />
-          </List.Content>
-          <Icon name='ticket' />
-          <List.Content>ID <b>{ticket.id}</b></List.Content>
-        </List.Item>
-      ))}
-    </List>
-  )
 
   return(
     <PageLayout {...props}>
@@ -118,11 +73,12 @@ const EventDetails: React.FC<WalletProps> = (props) => {
           <Grid.Row verticalAlign='top'>
             <Grid.Column width={4}>Tickets bought</Grid.Column>
             <Grid.Column>
-              {ticketsBought.length > 0 && renderTickets()}
-              {ticketsBought.length === 0 &&
-                <span>No tickets found</span>
-              }
-              <br/>
+              <Tickets
+                {...props}
+                tickets={tickets}
+                isTransfering={isLoading} 
+                onTransferTicket={(ticket) => transferTicket(ticket)}
+              />
               <BuyTicket
                 {...props}
                 contractAddress = {contractAddress}
@@ -141,11 +97,5 @@ const EventDetails: React.FC<WalletProps> = (props) => {
 type EventDetailsParams = {
   address: string;
 };
-
-type TicketInfo = {
-  id: number;
-  transferTo: string;
-  inProgress: boolean;
-}
 
 export default EventDetails;

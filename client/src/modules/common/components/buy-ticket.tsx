@@ -1,10 +1,16 @@
 import React, { Fragment, useState } from 'react';
 import { Button, Message } from 'semantic-ui-react';
-import { WalletProps } from '../data/wallet-props';
-import eventContract from '../event-contract';
-import { signer } from '../web3';
+import { WalletProps } from '../../../data/wallet-props';
+import eventContract from '../../../event-contract';
+import { signer } from '../../../web3';
 
-const BuyTicket: React.FC<BuyTicketProps> = (props) => {
+const BuyTicket: React.FC<BuyTicketProps> = ({
+  ticketPrice = '0',
+  contractAddress = '',
+  isWalletConnected = false,
+  onSuccess=() => {},
+  onError=() => {}
+}) => {
   const [inProgress, setInProgress] = useState<boolean>(false);
   const [ticketBought, setTicketBought] = useState<boolean>(false);
 
@@ -12,14 +18,14 @@ const BuyTicket: React.FC<BuyTicketProps> = (props) => {
     setInProgress(true);
     setTicketBought(false);
     try {
-      const transaction = await eventContract(props.contractAddress)
+      const transaction = await eventContract(contractAddress)
         .connect(signer)
-        .buyTicket({value: props.ticketPrice});
+        .buyTicket({value: ticketPrice});
       await transaction.wait();
       setTicketBought(true);
-      props.onSuccess();
+      onSuccess();
     } catch (err) {
-      props.onError(err.message);
+      onError(err.message);
     }
     setInProgress(false);
   }
@@ -31,7 +37,7 @@ const BuyTicket: React.FC<BuyTicketProps> = (props) => {
         onClick={handleBuyTicket}
         content='Buy Ticket'
         loading={inProgress}
-        disabled={!props.isWalletConnected}
+        disabled={!isWalletConnected}
       />
       <Message
         content='Ticket bought'

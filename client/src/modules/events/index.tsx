@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Container, Header, Button, Icon, Segment, Card } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import PageLayout from '../components/page-layout';
-import EventCard from '../components/event-card';
-import { WalletProps } from '../data/wallet-props';
+import PageLayout from '../common/components/page-layout';
+import EventCard from './components/event-card';
+import { WalletProps } from '../../data/wallet-props';
 
 const Home: React.FC<WalletProps> = (props) => {
   const [events, setEvents] = useState<any[]>([]);

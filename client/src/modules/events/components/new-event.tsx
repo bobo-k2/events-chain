@@ -3,12 +3,12 @@ import { Link, useHistory } from 'react-router-dom';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { Container, Form, Input, Button, Message } from 'semantic-ui-react';
 import { DateTimeInput } from 'semantic-ui-calendar-react';
-import PageLayout from '../components/page-layout';
-import ValidationError from '../components/validation-error';
-import { IEventInfo, IEventDbInfo } from '../data/event-info';
-import eventFactoryContract from '../event-factory-contract';
-import { signer } from '../web3';
-import { WalletProps } from '../data/wallet-props';
+import PageLayout from '../../common/components/page-layout';
+import ValidationError from '../../common/components/validation-error';
+import { IEventInfo, IEventDbInfo } from '../../../data/event-info';
+import eventFactoryContract from '../../../event-factory-contract';
+import { signer } from '../../../web3';
+import { WalletProps } from '../../../data/wallet-props';
 import { ethers } from 'ethers';
 
 const NewEvent: React.FC<WalletProps> = (props) => {
@@ -23,12 +23,11 @@ const NewEvent: React.FC<WalletProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   
-  const createEvent: SubmitHandler<IEventInfo> = async (data): Promise<void> => {
+  const createEvent: SubmitHandler<IEventInfo> = async (data: IEventInfo): Promise<void> => {
     setLoading(true);
     setErrorMessage('');
 
     try {
-      console.log(ethers.utils.parseEther(data.ticketPrice).toString());
       const ticketPrice = ethers.utils.parseEther(data.ticketPrice).toString();
 
       const transaction = await eventFactoryContract
@@ -96,11 +95,9 @@ const NewEvent: React.FC<WalletProps> = (props) => {
                 onChange={handleDateChange}
                 dateFormat='yyyy-MM-DD'
                 minDate={new Date()}
-                value=''
               />
             }
           />
-          
           <ValidationError error={errors.date} message='Event date is required.' />
 
           <label>Ticket price</label>

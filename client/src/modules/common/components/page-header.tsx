@@ -1,9 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Container, Menu, Button } from 'semantic-ui-react';
-import { WalletProps } from '../data/wallet-props';
+import { WalletProps } from '../../../data/wallet-props';
 
-const PageHeader: React.FC<WalletProps> = ({ isWalletConnected, isConnectingWallet, onWalletConnect }) => {
+const PageHeader: React.FC<WalletProps> = ({
+  isWalletConnected = false,
+  isConnectingWallet = false,
+  onWalletConnect = () => {}
+}) => {
   return(
     <Segment
       inverted
