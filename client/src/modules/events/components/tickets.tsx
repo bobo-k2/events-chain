@@ -25,10 +25,19 @@ const Tickets: React.FC<Props> = ({
 
   const setTransferAddress = (address: string, index: number): void => {
     setTicketsBought([
-      ...ticketsBought.slice(0,index),
-      Object.assign({}, ticketsBought[index], {transferTo: address}),
-      ...ticketsBought.slice(index+1)
+      ...ticketsBought.slice(0, index),
+      { ...ticketsBought[index], transferTo: address },
+      ...ticketsBought.slice(index + 1)
     ]);
+  }
+
+  const handleTransferTicket = (ticket: TicketInfo, index: number): void => {
+    setTicketsBought([
+      ...ticketsBought.slice(0, index),
+      { ...ticketsBought[index], inProgress: true },
+      ...ticketsBought.slice(index + 1)
+    ]);
+    onTransferTicket(ticket);
   }
 
   return(
@@ -45,8 +54,8 @@ const Tickets: React.FC<Props> = ({
                   color: 'green',
                   content: 'Transfer',
                   disabled: !canTransfer(index),
-                  loading: isTransfering,
-                  onClick: () => onTransferTicket(ticketsBought[index])
+                  loading:  ticket.inProgress && isTransfering,
+                  onClick: () => handleTransferTicket(ticket, index)
                 }}
                 style={{
                   width: 450
