@@ -2,11 +2,17 @@
 
 EventsChain is dapp dealig with event tickets management. User can create an event or but tickets for some other event. Ticket owner can easily transfer tickets to another user.
 
+## The Poject structure
+
+Root folder - Node js backend application, provides database access and server the client application
+Client - React fronted application
+Solidity - Smart contracts, tests and deployment script
+
 ## How to run
 
 Checkout the repository first.
 
-### Contracts deployment
+### Deploy contract
 
 From command prompt navigate to Solidity subfolder and run the following command
 
@@ -49,7 +55,7 @@ Copy Token address and paste it to value of contractAddress variable in client\s
 const contractAddress = '0x038...';
 ```
 
-### Node js and fronted deployment 
+### Deploy backend and fronted applications 
 
 From command prompt navigate to the project root folder and run the following commands
 
@@ -60,6 +66,7 @@ npm start
 ```
 
 Open your favourite web browser and navigate to http://localhost:3000
+
 Enjoy the application.
 
 
