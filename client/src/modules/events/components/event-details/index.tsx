@@ -1,53 +1,54 @@
-import { BigNumber, ethers } from 'ethers';
-import React, { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
+import React, { useEffect, useReducer } from 'react';
 import { useParams } from 'react-router';
-import { Container, Grid, Message } from '../../common/components';
-import BuyTicket from '../../common/components/buy-ticket';
-import PageLayout from '../../common/components/page-layout';
-import Tickets, { TicketInfo } from './tickets';
-import { WalletProps } from '../../../data/wallet-props';
-import eventContract from '../../../event-contract';
-import { signer } from '../../../web3';
+import { Container, Grid, Message } from '../../../common/components';
+import BuyTicket from '../../../common/components/buy-ticket';
+import PageLayout from '../../../common/components/page-layout';
+import Tickets, { TicketInfo } from '../tickets';
+import { WalletProps } from '../../../../data/wallet-props';
+import eventContract from '../../../../event-contract';
+import { signer } from '../../../../web3';
+import {
+  errorAction,
+  ActionType
+} from './actions';
+import { initialState, reducer } from './reducer';
 
 declare const window: any;
 
 const EventDetails: React.FC<WalletProps> = (props) => {
   const { address: contractAddress } = useParams<EventDetailsParams>();
-  const [tickets, setTickets] = useState<number[]>([]);
-  const [ticketPrice, setTicketprice] = useState<BigNumber>(BigNumber.from('0'));
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     getEvent();
   }, []);
 
   const getEvent = async (): Promise<void> => {
-    setErrorMessage('');
     try{
+      dispatch({ type: ActionType.EventLoading });
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      setTickets(await eventContract(contractAddress).getTicketsForUser(accounts[0]));
-      setTicketprice(await eventContract(contractAddress).ticketPrice());
+      const tickets = await eventContract(contractAddress).getTicketsForUser(accounts[0]);
+      const ticketPrice = await eventContract(contractAddress).ticketPrice();
+      dispatch({ type: ActionType.EventLoaded, tickets, ticketPrice });
     } catch (err) {
-      setErrorMessage(err.message);
+      dispatch({type: ActionType.Error, errorMessage: err.message });
     }
   }
 
   const transferTicket = async (ticket: TicketInfo): Promise<void> => {
-    setErrorMessage('');
-    setIsLoading(true);
-
     try{
+      dispatch({ type: ActionType.TicketTransfering })
       const transaction = await eventContract(contractAddress)
         .connect(signer)
         .transferTicket(ticket.id, ticket.transferTo);
       await transaction.wait();
+      dispatch({ type: ActionType.TicketTransfered });
+
       await getEvent();
     } catch (err) {
-      setErrorMessage(err.message);
+      dispatch(errorAction(err.message));
     }
-
-    setIsLoading(false);
   }
 
   return(
@@ -56,8 +57,8 @@ const EventDetails: React.FC<WalletProps> = (props) => {
         <Message
           error
           header="Oops!"
-          content={errorMessage}
-          hidden={errorMessage === ''}
+          content={state.errorMessage}
+          hidden={state.errorMessage === ''}
           style={{wordWrap: 'break-word'}}
         />
         <Grid columns={2} divided>
@@ -67,7 +68,7 @@ const EventDetails: React.FC<WalletProps> = (props) => {
           </Grid.Row>
           <Grid.Row verticalAlign='middle'>
             <Grid.Column width={4}>Ticket Price</Grid.Column>
-            <Grid.Column><b>{ethers.utils.formatEther(ticketPrice)}</b> ETH</Grid.Column>
+            <Grid.Column><b>{ethers.utils.formatEther(state.ticketPrice)}</b> ETH</Grid.Column>
           </Grid.Row>
 
           <Grid.Row verticalAlign='top'>
@@ -75,16 +76,16 @@ const EventDetails: React.FC<WalletProps> = (props) => {
             <Grid.Column>
               <Tickets
                 {...props}
-                tickets={tickets}
-                isTransfering={isLoading} 
+                tickets={state.tickets}
+                isTransfering={state.isLoading} 
                 onTransferTicket={(ticket) => transferTicket(ticket)}
               />
               <BuyTicket
                 {...props}
                 contractAddress = {contractAddress}
-                ticketPrice = {ticketPrice.toString()}
+                ticketPrice = {state.ticketPrice.toString()}
                 onSuccess={async () => await getEvent()}
-                onError={(error) => setErrorMessage(error)}
+                onError={(error) => dispatch(errorAction(error))}
               />
             </Grid.Column>
           </Grid.Row>
