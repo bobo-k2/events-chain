@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import { WalletProps } from '../../../data/wallet-props';
-import PageHeader from './page-header';
+import { WalletProps } from 'data/wallet-props';
+import PageHeader from 'modules/common/components/page-header';
 
 const PageLayout: React.FC<WalletProps> = (props) => {
   return(

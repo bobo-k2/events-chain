@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Input, List, Icon } from '../../common/components';
-import { WalletProps } from '../../../data/wallet-props';
+import { Input, List, Icon } from 'modules/common/components';
+import { WalletProps } from 'data/wallet-props';
 
 const Tickets: React.FC<Props> = ({
   tickets = [],

@@ -1,13 +1,13 @@
 import { ethers } from 'ethers';
 import React, { useEffect, useReducer } from 'react';
 import { useParams } from 'react-router';
-import { Container, Grid, Message } from '../../../common/components';
-import BuyTicket from '../../../common/components/buy-ticket';
-import PageLayout from '../../../common/components/page-layout';
-import Tickets, { TicketInfo } from '../tickets';
-import { WalletProps } from '../../../../data/wallet-props';
-import eventContract from '../../../../event-contract';
-import { signer } from '../../../../web3';
+import { Container, Grid, Message } from 'modules/common/components';
+import BuyTicket from 'modules/common/components/buy-ticket';
+import PageLayout from 'modules/common/components/page-layout';
+import Tickets, { TicketInfo } from 'modules/events/components/tickets';
+import { WalletProps } from 'data/wallet-props';
+import eventContract from 'event-contract';
+import { signer } from 'web3';
 import {
   errorAction,
   ActionType

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Route, Switch } from 'react-router';
-import EventDetails from './modules/events/components/event-details';
-import Home from './modules/events';
-import NewEvent from './modules/events/components/new-event';
+import EventDetails from 'modules/events/components/event-details';
+import Home from 'modules/events';
+import NewEvent from 'modules/events/components/new-event';
 
 declare const window: any;
 

@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from 'react';
-import { Button, Message } from '../../common/components';
-import { WalletProps } from '../../../data/wallet-props';
-import eventContract from '../../../event-contract';
-import { signer } from '../../../web3';
+import { Button, Message } from 'modules/common/components';
+import { WalletProps } from 'data/wallet-props';
+import eventContract from 'event-contract';
+import { signer } from 'web3';
 
 const BuyTicket: React.FC<BuyTicketProps> = ({
   ticketPrice = '0',

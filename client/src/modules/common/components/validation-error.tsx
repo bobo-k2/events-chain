@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Message } from '../../common/components';
+import { Message } from 'modules/common/components';
 import { FieldError } from 'react-hook-form';
 
 const ValidationError: React.FC<Props> = ({

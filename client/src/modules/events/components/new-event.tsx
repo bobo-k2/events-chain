@@ -1,14 +1,14 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { Container, Form, Input, Button, Message, DateTimeInput } from '../../common/components';
-import PageLayout from '../../common/components/page-layout';
-import ValidationError from '../../common/components/validation-error';
-import { IEventInfo, IEventDbInfo } from '../../../data/event-info';
-import eventFactoryContract from '../../../event-factory-contract';
-import { signer } from '../../../web3';
-import { WalletProps } from '../../../data/wallet-props';
 import { ethers } from 'ethers';
+import { Container, Form, Input, Button, Message, DateTimeInput } from 'modules/common/components';
+import PageLayout from 'modules/common/components/page-layout';
+import ValidationError from 'modules/common/components/validation-error';
+import { IEventInfo, IEventDbInfo } from 'data/event-info';
+import eventFactoryContract from 'event-factory-contract';
+import { signer } from 'web3';
+import { WalletProps } from 'data/wallet-props';
 
 const NewEvent: React.FC<WalletProps> = (props) => {
   const {

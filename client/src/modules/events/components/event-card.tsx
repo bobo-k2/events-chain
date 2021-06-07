@@ -1,9 +1,9 @@
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card, Message } from '../../common/components';
-import { IEventDbInfo } from '../../../data/event-info';
-import BuyTicket from '../../common/components/buy-ticket';
+import { Button, Card, Message } from 'modules/common/components';
+import { IEventDbInfo } from 'data/event-info';
+import BuyTicket from 'modules/common/components/buy-ticket';
 
 const EventCard: React.FC<Props> = ({
   event = {
