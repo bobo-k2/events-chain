@@ -1,8 +1,7 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { Container, Form, Input, Button, Message } from 'semantic-ui-react';
-import { DateTimeInput } from 'semantic-ui-calendar-react';
+import { Container, Form, Input, Button, Message, DateTimeInput } from '../../common/components';
 import PageLayout from '../../common/components/page-layout';
 import ValidationError from '../../common/components/validation-error';
 import { IEventInfo, IEventDbInfo } from '../../../data/event-info';

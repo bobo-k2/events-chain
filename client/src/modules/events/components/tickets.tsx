@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { List, Icon, Input} from 'semantic-ui-react';
+import { Input, List, Icon } from '../../common/components';
 import { WalletProps } from '../../../data/wallet-props';
 
 const Tickets: React.FC<Props> = ({

@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Message } from 'semantic-ui-react';
+import { Message } from '../../common/components';
 import { FieldError } from 'react-hook-form';
 
 const ValidationError: React.FC<Props> = ({

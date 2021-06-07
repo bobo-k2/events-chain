@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card, Message } from 'semantic-ui-react';
+import { Button, Card, Message } from '../../common/components';
 import { IEventDbInfo } from '../../../data/event-info';
 import BuyTicket from '../../common/components/buy-ticket';
 

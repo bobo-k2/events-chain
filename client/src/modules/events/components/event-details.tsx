@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { Container, Grid, Message } from 'semantic-ui-react';
+import { Container, Grid, Message } from '../../common/components';
 import BuyTicket from '../../common/components/buy-ticket';
 import PageLayout from '../../common/components/page-layout';
 import Tickets, { TicketInfo } from './tickets';

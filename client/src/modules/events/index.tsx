@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Header, Button, Icon, Segment, Card } from 'semantic-ui-react';
+import { Container, Header, Button, Icon, Segment, Card } from '../common/components';
 import { Link } from 'react-router-dom';
 import PageLayout from '../common/components/page-layout';
 import EventCard from './components/event-card';

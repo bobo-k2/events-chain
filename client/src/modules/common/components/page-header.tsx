@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Container, Menu, Button } from 'semantic-ui-react';
+import { Segment, Container, Menu, Button } from '../../common/components';
 import { WalletProps } from '../../../data/wallet-props';
 
 const PageHeader: React.FC<WalletProps> = ({

@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { Button, Message } from 'semantic-ui-react';
+import { Button, Message } from '../../common/components';
 import { WalletProps } from '../../../data/wallet-props';
 import eventContract from '../../../event-contract';
 import { signer } from '../../../web3';
