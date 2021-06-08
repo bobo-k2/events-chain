@@ -32,6 +32,8 @@ module.exports = {
 };
 ```
 
+or use scripts/_secrets.js as template.
+
 Make sure you entered values for ALCHEMY_API_KEY and ROPSTEN_PRIVATE_KEY constants with your own Alchemy API key and Ropsten private key.
 
 From command prompt run the following commands:
