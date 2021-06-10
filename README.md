@@ -1,8 +1,8 @@
 # EventsChain
 
-EventsChain is dapp dealig with event tickets management. User can create an event or but tickets for some other event. Ticket owner can easily transfer tickets to another user.
+EventsChain is dapp dealing with event tickets management. User can create an event or buy tickets for some other event. Ticket owner can easily transfer tickets to another user.
 
-## The Poject structure
+## The Project structure
 
 Root folder - Node js backend application, provides database access and server the client application
 Client - React fronted application
@@ -67,7 +67,7 @@ npm run build
 npm start
 ```
 
-Open your favourite web browser and navigate to http://localhost:3000
+Open your favorite web browser and navigate to http://localhost:3000
 
 Enjoy the application.
 
